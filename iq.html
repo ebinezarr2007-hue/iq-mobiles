@@ -1,0 +1,467 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.app{padding:1rem 0;max-width:680px}
+.header{background:linear-gradient(135deg,#0C447C 0%,#185FA5 60%,#378ADD 100%);border-radius:var(--border-radius-lg);padding:1.25rem 1.5rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px}
+.logo-box{width:50px;height:50px;border-radius:12px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#fff;flex-shrink:0}
+.shop-name{font-size:20px;font-weight:500;color:#fff}
+.shop-tag{font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px}
+.header-date{margin-left:auto;text-align:right;color:rgba(255,255,255,0.85);font-size:12px;line-height:1.8}
+.live-time{font-size:16px;font-weight:500;color:#fff}
+
+.nav{display:flex;gap:4px;margin-bottom:1.25rem;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:4px}
+.nav-btn{flex:1;padding:8px 6px;border:none;background:transparent;border-radius:6px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;transition:all .15s;white-space:nowrap}
+.nav-btn.active{background:var(--color-background-primary);color:var(--color-text-primary);font-weight:500;border:0.5px solid var(--color-border-tertiary)}
+
+.metrics4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem}
+.met{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.1rem;display:flex;align-items:center;gap:12px}
+.met-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.met-lbl{font-size:12px;color:var(--color-text-secondary);margin-bottom:3px}
+.met-val{font-size:20px;font-weight:500;color:var(--color-text-primary)}
+.met-val.g{color:#0F6E56}
+
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.ctitle{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:1rem}
+
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1rem}
+.cat-btn{padding:10px 6px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);cursor:pointer;text-align:center;transition:all .15s}
+.cat-btn:hover{border-color:#378ADD;background:#E6F1FB}
+.cat-btn.sel{border-color:#185FA5;background:#B5D4F4;font-weight:500}
+.cat-icon{font-size:20px;display:block;margin-bottom:4px}
+.cat-name{font-size:11px;color:var(--color-text-secondary);line-height:1.3}
+.cat-btn.sel .cat-name{color:#0C447C}
+
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:12px;color:var(--color-text-secondary)}
+input,select,textarea{width:100%;padding:8px 10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:14px;font-family:var(--font-sans)}
+textarea{resize:vertical;min-height:64px;line-height:1.6}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#185FA5;box-shadow:0 0 0 2px rgba(24,95,165,.12)}
+
+.note-wrap{position:relative;margin-bottom:10px}
+.note-label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.note-label-row label{font-size:12px;color:var(--color-text-secondary)}
+.note-lang{font-size:11px;color:#185FA5;background:#E6F1FB;padding:2px 8px;border-radius:20px;font-weight:500}
+
+.mic-row{display:flex;gap:8px;margin-top:6px;align-items:center}
+.mic-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary);color:var(--color-text-primary);font-size:13px;cursor:pointer;transition:all .2s;font-family:var(--font-sans)}
+.mic-btn:hover{border-color:#185FA5;background:#E6F1FB;color:#0C447C}
+.mic-btn.recording{background:#FCEBEB;border-color:#F09595;color:#A32D2D;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.mic-dot{width:10px;height:10px;border-radius:50%;background:#E24B4A;flex-shrink:0}
+.mic-dot.idle{background:#888}
+.mic-status{font-size:12px;color:var(--color-text-secondary);flex:1}
+.mic-status.active{color:#A32D2D;font-weight:500}
+
+.listening-box{background:#FCEBEB;border:0.5px solid #F09595;border-radius:var(--border-radius-md);padding:10px 14px;margin-top:8px;display:none;align-items:center;gap:10px}
+.listening-box.show{display:flex}
+.wave{display:flex;align-items:center;gap:3px}
+.wave span{display:block;width:4px;border-radius:2px;background:#E24B4A;animation:wave 0.8s ease-in-out infinite}
+.wave span:nth-child(1){height:8px;animation-delay:0s}
+.wave span:nth-child(2){height:16px;animation-delay:.1s}
+.wave span:nth-child(3){height:12px;animation-delay:.2s}
+.wave span:nth-child(4){height:20px;animation-delay:.3s}
+.wave span:nth-child(5){height:10px;animation-delay:.4s}
+@keyframes wave{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.8)}}
+.listening-text{font-size:13px;color:#A32D2D;font-weight:500}
+.interim-text{font-size:12px;color:#E24B4A;margin-top:2px}
+
+.btn-add{width:100%;padding:10px;background:#185FA5;color:#fff;border:none;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;cursor:pointer;margin-top:4px}
+.btn-add:hover{background:#0C447C}
+
+.elist{display:flex;flex-direction:column;gap:8px}
+.eitem{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:12px 14px;border-left:3px solid #185FA5}
+.eitem-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.etype{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.eright{display:flex;align-items:center;gap:10px}
+.eamt{font-size:15px;font-weight:500;color:#0F6E56}
+.emeta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px}
+.time-badge{display:inline-flex;align-items:center;gap:4px;background:#E6F1FB;color:#185FA5;font-size:11px;font-weight:500;padding:3px 8px;border-radius:20px}
+.note-badge{display:inline-flex;align-items:center;gap:4px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);font-size:12px;padding:4px 10px;border-radius:var(--border-radius-md);flex:1;min-width:0}
+.note-badge span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.bdel{width:24px;height:24px;border-radius:50%;background:none;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bdel:hover{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
+
+.mitem{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);cursor:pointer;margin-bottom:8px}
+.mitem:hover{background:var(--color-background-secondary)}
+.mname{font-size:14px;font-weight:500}
+.mcnt{font-size:12px;color:var(--color-text-secondary)}
+.mtot{font-size:15px;font-weight:500;color:#0F6E56}
+
+.brow{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.blbl{font-size:12px;color:var(--color-text-secondary);width:100px;text-align:right;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btrack{flex:1;height:10px;background:var(--color-background-secondary);border-radius:5px;overflow:hidden}
+.bfill{height:100%;border-radius:5px;transition:width .5s}
+.bval{font-size:12px;color:var(--color-text-secondary);width:65px;flex-shrink:0}
+
+.daytop{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#E6F1FB;border-radius:var(--border-radius-md);margin-bottom:8px}
+.daylbl{font-size:13px;font-weight:500;color:#0C447C}
+.daytot{font-size:13px;font-weight:500;color:#0F6E56}
+.empty{text-align:center;padding:2.5rem;color:var(--color-text-secondary);font-size:14px}
+.back{background:none;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);padding:6px 12px;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;margin-bottom:1rem}
+.back:hover{background:var(--color-background-secondary)}
+
+.dash-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem}
+.dash-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.1rem}
+.dash-card-title{font-size:12px;color:var(--color-text-secondary);margin-bottom:.5rem}
+.time-now-box{background:#E6F1FB;border:0.5px solid #B5D4F4;border-radius:var(--border-radius-md);padding:8px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.no-support{background:#FAEEDA;border:0.5px solid #FAC775;border-radius:var(--border-radius-md);padding:8px 12px;font-size:12px;color:#633806;margin-top:6px}
+</style>
+
+<div class="app">
+<div class="header">
+  <div class="logo-box">IQ</div>
+  <div>
+    <div class="shop-name">IQ Mobiles</div>
+    <div class="shop-tag">Xerox · Mobiles · Online Services</div>
+  </div>
+  <div class="header-date">
+    <div class="live-time" id="live-clock"></div>
+    <div id="hday"></div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('dash')">Dashboard</button>
+  <button class="nav-btn" onclick="showTab('daily')">Daily</button>
+  <button class="nav-btn" onclick="showTab('monthly')">Monthly</button>
+  <button class="nav-btn" onclick="showTab('analytics')">Analytics</button>
+</div>
+
+<div id="tab-dash"></div>
+<div id="tab-daily" style="display:none"></div>
+<div id="tab-monthly" style="display:none"></div>
+<div id="tab-analytics" style="display:none"></div>
+</div>
+
+<script>
+const CATS=[
+  {id:'xerox',name:'Xerox',icon:'🖨️',color:'#185FA5'},
+  {id:'print',name:'Print',icon:'🖨️',color:'#185FA5'},
+  {id:'scan',name:'Scan',icon:'📄',color:'#185FA5'},
+  {id:'lamination',name:'Lamination',icon:'📋',color:'#185FA5'},
+  {id:'phone_cover',name:'Phone Cover',icon:'📱',color:'#534AB7'},
+  {id:'pouch',name:'Pouch',icon:'👜',color:'#534AB7'},
+  {id:'temper',name:'Temper Glass',icon:'🔲',color:'#534AB7'},
+  {id:'headphone',name:'Headphones',icon:'🎧',color:'#534AB7'},
+  {id:'speaker',name:'Speaker',icon:'🔊',color:'#534AB7'},
+  {id:'charger',name:'Charger/Cable',icon:'🔌',color:'#534AB7'},
+  {id:'repair',name:'Mobile Repair',icon:'🔧',color:'#0F6E56'},
+  {id:'aadhaar',name:'Aadhaar Update',icon:'🪪',color:'#854F0B'},
+  {id:'pan',name:'PAN Card',icon:'🗂️',color:'#854F0B'},
+  {id:'form',name:'Govt Form',icon:'📝',color:'#854F0B'},
+  {id:'recharge',name:'Recharge',icon:'📶',color:'#854F0B'},
+  {id:'online',name:'Online Work',icon:'💻',color:'#854F0B'},
+  {id:'passport',name:'Passport',icon:'📕',color:'#854F0B'},
+  {id:'other',name:'Other',icon:'➕',color:'#5F5E5A'}
+];
+
+let entries=[],selCat='xerox',detailMonth=null;
+let recognition=null,isRecording=false;
+
+function updateClock(){
+  const n=new Date();
+  const c=document.getElementById('live-clock');
+  const h=document.getElementById('hday');
+  if(c)c.textContent=n.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true});
+  if(h)h.textContent=n.toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+}
+updateClock();setInterval(updateClock,1000);
+
+async function load(){
+  try{const r=await window.storage.get('iqmob4-entries');if(r)entries=JSON.parse(r.value);}catch(e){entries=[];}
+  renderAll();
+}
+async function save(){try{await window.storage.set('iqmob4-entries',JSON.stringify(entries));}catch(e){}}
+
+function today(){return new Date().toISOString().split('T')[0];}
+function fmtD(ds){return new Date(ds+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'});}
+function fmtM(ym){const[y,m]=ym.split('-');return new Date(y,m-1,1).toLocaleDateString('en-IN',{month:'long',year:'numeric'});}
+function cat(id){return CATS.find(c=>c.id===id)||{name:id,icon:'➕',color:'#888'};}
+function getNowTime(){return new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});}
+
+// ── Voice Recognition ──────────────────────────────────────
+function initRecognition(){
+  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRec)return null;
+  const r=new SpeechRec();
+  r.lang='ta-IN';
+  r.continuous=true;
+  r.interimResults=true;
+  r.maxAlternatives=1;
+  return r;
+}
+
+function toggleRecording(){
+  if(isRecording){stopRecording();}else{startRecording();}
+}
+
+function startRecording(){
+  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRec){
+    document.getElementById('no-support-msg').style.display='block';
+    return;
+  }
+  recognition=initRecognition();
+  if(!recognition)return;
+
+  const ta=document.getElementById('note');
+  const btn=document.getElementById('mic-btn');
+  const lb=document.getElementById('listening-box');
+  const interim=document.getElementById('interim-txt');
+  let finalText=ta.value;
+
+  recognition.onstart=()=>{
+    isRecording=true;
+    btn.className='mic-btn recording';
+    btn.innerHTML='<span class="mic-dot"></span> நிறுத்து (Stop)';
+    lb.className='listening-box show';
+  };
+
+  recognition.onresult=(e)=>{
+    let interimTxt='';
+    let newFinal='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal){newFinal+=t+' ';}
+      else{interimTxt+=t;}
+    }
+    if(newFinal){
+      finalText+=(finalText&&!finalText.endsWith(' ')?'\n':'')+newFinal;
+      ta.value=finalText;
+    }
+    if(interim)interim.textContent=interimTxt;
+  };
+
+  recognition.onerror=(e)=>{
+    stopRecording();
+    if(e.error==='not-allowed'){
+      alert('Microphone permission denied. Please allow microphone access in your browser settings.');
+    }
+  };
+
+  recognition.onend=()=>{
+    if(isRecording){recognition.start();}
+  };
+
+  recognition.start();
+}
+
+function stopRecording(){
+  isRecording=false;
+  if(recognition){
+    recognition.onend=null;
+    recognition.stop();
+    recognition=null;
+  }
+  const btn=document.getElementById('mic-btn');
+  const lb=document.getElementById('listening-box');
+  const interim=document.getElementById('interim-txt');
+  if(btn){btn.className='mic-btn';btn.innerHTML='<span class="mic-dot idle"></span> தமிழில் பேசு (Record)';}
+  if(lb)lb.className='listening-box';
+  if(interim)interim.textContent='';
+}
+
+function clearNote(){
+  const ta=document.getElementById('note');
+  if(ta)ta.value='';
+  stopRecording();
+}
+
+// ── Entries ──────────────────────────────────────────────
+function addEntry(){
+  const amt=parseFloat(document.getElementById('amt').value);
+  const note=document.getElementById('note').value.trim();
+  const date=document.getElementById('edate').value||today();
+  const tv=document.getElementById('etime-inp').value;
+  if(!amt||amt<=0){alert('Amount enter பண்ணுங்க');return;}
+  const t12=tv?new Date('1970-01-01T'+tv).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}):getNowTime();
+  entries.push({id:Date.now(),cat:selCat,amount:amt,note,date,time:t12});
+  stopRecording();
+  save();
+  document.getElementById('amt').value='';
+  document.getElementById('note').value='';
+  renderAll();
+}
+
+function delEntry(id){
+  entries=entries.filter(e=>e.id!==id);
+  save();
+  renderAll();
+  if(detailMonth)renderMonthly();
+}
+
+function showTab(t){
+  ['dash','daily','monthly','analytics'].forEach(x=>{
+    document.getElementById('tab-'+x).style.display=x===t?'block':'none';
+    document.querySelectorAll('.nav-btn')[['dash','daily','monthly','analytics'].indexOf(x)].classList.toggle('active',x===t);
+  });
+  if(t!=='daily')stopRecording();
+  if(t==='monthly')renderMonthly();
+  if(t==='analytics')renderAnalytics();
+}
+
+function renderAll(){renderDash();renderDaily();}
+
+function entryCard(e,showDel,onDel){
+  const c=cat(e.cat);
+  return`<div class="eitem" style="border-left-color:${c.color||'#185FA5'}">
+    <div class="eitem-top">
+      <div class="etype">${c.icon} ${c.name}</div>
+      <div class="eright"><div class="eamt">+₹${e.amount.toLocaleString('en-IN')}</div>${showDel?`<button class="bdel" onclick="${onDel}">×</button>`:''}</div>
+    </div>
+    <div class="emeta">
+      <span class="time-badge">⏰ ${e.time||'—'}</span>
+      ${e.note?`<span class="note-badge">📝 <span>${e.note}</span></span>`:''}
+    </div>
+  </div>`;
+}
+
+function renderDash(){
+  const td=today(),ym=td.slice(0,7);
+  const todayE=entries.filter(e=>e.date===td);
+  const todayT=todayE.reduce((s,e)=>s+e.amount,0);
+  const monthE=entries.filter(e=>e.date.startsWith(ym));
+  const monthT=monthE.reduce((s,e)=>s+e.amount,0);
+  const allT=entries.reduce((s,e)=>s+e.amount,0);
+  const yd=new Date();yd.setDate(yd.getDate()-1);
+  const yds=yd.toISOString().split('T')[0];
+  const yest=entries.filter(e=>e.date===yds).reduce((s,e)=>s+e.amount,0);
+  const days7=[];
+  for(let i=6;i>=0;i--){const dd=new Date();dd.setDate(dd.getDate()-i);const ds=dd.toISOString().split('T')[0];days7.push({ds,lbl:dd.toLocaleDateString('en-IN',{day:'numeric',month:'short'}),tot:entries.filter(e=>e.date===ds).reduce((s,e)=>s+e.amount,0)});}
+  const mx7=Math.max(...days7.map(d=>d.tot),1);
+  const byType={};todayE.forEach(e=>{byType[e.cat]=(byType[e.cat]||0)+e.amount;});
+  const topToday=Object.entries(byType).sort((a,b)=>b[1]-a[1]).slice(0,4);
+  const lastFew=[...todayE].reverse().slice(0,3);
+  document.getElementById('tab-dash').innerHTML=`
+    <div class="metrics4">
+      <div class="met"><div class="met-icon" style="background:#E6F1FB">💰</div><div><div class="met-lbl">Today's income</div><div class="met-val g">₹${todayT.toLocaleString('en-IN')}</div></div></div>
+      <div class="met"><div class="met-icon" style="background:#EAF3DE">📅</div><div><div class="met-lbl">This month</div><div class="met-val g">₹${monthT.toLocaleString('en-IN')}</div></div></div>
+      <div class="met"><div class="met-icon" style="background:#FAEEDA">🕐</div><div><div class="met-lbl">Yesterday</div><div class="met-val">₹${yest.toLocaleString('en-IN')}</div></div></div>
+      <div class="met"><div class="met-icon" style="background:#E1F5EE">🏆</div><div><div class="met-lbl">All time</div><div class="met-val g">₹${allT.toLocaleString('en-IN')}</div></div></div>
+    </div>
+    <div class="card">
+      <div class="ctitle">Last 7 days</div>
+      ${days7.map(d=>`<div class="brow"><div class="blbl">${d.lbl}</div><div class="btrack"><div class="bfill" style="width:${d.tot>0?Math.round(d.tot/mx7*100):0}%;background:${d.ds===today()?'#1D9E75':'#378ADD'}"></div></div><div class="bval">${d.tot>0?'₹'+d.tot.toLocaleString('en-IN'):'—'}</div></div>`).join('')}
+    </div>
+    <div class="dash-row">
+      <div class="dash-card"><div class="dash-card-title">Today top services</div>${topToday.length===0?'<div style="font-size:13px;color:var(--color-text-secondary);padding:.5rem 0">No entries today</div>':topToday.map(([cid,amt])=>{const c=cat(cid);return`<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:0.5px solid var(--color-border-tertiary)"><span style="font-size:13px">${c.icon} ${c.name}</span><span style="font-size:13px;font-weight:500;color:#0F6E56">₹${amt.toLocaleString('en-IN')}</span></div>`;}).join('')}</div>
+      <div class="dash-card"><div class="dash-card-title">Quick stats</div>
+        <div style="font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between"><span style="color:var(--color-text-secondary)">Today entries</span><span style="font-weight:500">${todayE.length}</span></div>
+        <div style="font-size:13px;padding:4px 0;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between"><span style="color:var(--color-text-secondary)">Month entries</span><span style="font-weight:500">${monthE.length}</span></div>
+        <div style="font-size:13px;padding:4px 0;display:flex;justify-content:space-between"><span style="color:var(--color-text-secondary)">Avg/entry</span><span style="font-weight:500">₹${entries.length?Math.round(allT/entries.length).toLocaleString('en-IN'):'0'}</span></div>
+      </div>
+    </div>
+    ${lastFew.length>0?`<div class="card"><div class="ctitle">Recent entries today</div><div class="elist">${lastFew.map(e=>entryCard(e,false,'')).join('')}</div></div>`:''}`;
+}
+
+function renderDaily(){
+  const td=today();
+  const todayE=entries.filter(e=>e.date===td);
+  document.getElementById('tab-daily').innerHTML=`
+    <div class="card">
+      <div class="ctitle">Select service</div>
+      <div class="cat-grid">${CATS.map(c=>`<div class="cat-btn${selCat===c.id?' sel':''}" onclick="selCat='${c.id}';renderDaily()"><span class="cat-icon">${c.icon}</span><span class="cat-name">${c.name}</span></div>`).join('')}</div>
+      <div class="time-now-box"><span style="font-size:12px;color:#185FA5">⏰ Current time</span><span style="font-size:14px;font-weight:500;color:#0C447C" id="form-clock">${getNowTime()}</span></div>
+      <div class="frow3">
+        <div class="fg"><label>Amount (₹)</label><input type="number" id="amt" placeholder="0" min="0"/></div>
+        <div class="fg"><label>Date</label><input type="date" id="edate" value="${td}"/></div>
+        <div class="fg"><label>Time</label><input type="time" id="etime-inp" value="${new Date().toTimeString().slice(0,5)}"/></div>
+      </div>
+
+      <div class="note-wrap">
+        <div class="note-label-row">
+          <label>குறிப்பு / Note</label>
+          <span class="note-lang">தமிழ் voice enabled</span>
+        </div>
+        <textarea id="note" placeholder="Customer பேரு, pages count, model number... (அல்லது mic பட்டன் அழுத்தி தமிழில் பேசுங்க)"></textarea>
+
+        <div class="mic-row">
+          <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">
+            <span class="mic-dot idle"></span> தமிழில் பேசு (Record)
+          </button>
+          <button class="mic-btn" onclick="clearNote()" style="padding:8px 10px">🗑️ Clear</button>
+          <span class="mic-status" id="mic-status">Mic button அழுத்தி தமிழில் பேசுங்க</span>
+        </div>
+
+        <div class="listening-box" id="listening-box">
+          <div class="wave"><span></span><span></span><span></span><span></span><span></span></div>
+          <div>
+            <div class="listening-text">கேட்கிறேன்... பேசுங்க</div>
+            <div class="interim-text" id="interim-txt"></div>
+          </div>
+        </div>
+
+        <div class="no-support" id="no-support-msg" style="display:none">
+          உங்கள் browser-ல் voice recognition support இல்லை. Chrome browser-ல் try பண்ணுங்க.
+        </div>
+      </div>
+
+      <button class="btn-add" onclick="addEntry()">+ Entry சேர்</button>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">Today's entries <span style="font-size:13px;color:#0F6E56;font-weight:500">— ₹${todayE.reduce((s,e)=>s+e.amount,0).toLocaleString('en-IN')}</span></div>
+      ${todayE.length===0?'<div class="empty">இன்று entries இல்லை</div>':
+        `<div class="elist">${[...todayE].reverse().map(e=>entryCard(e,true,`delEntry(${e.id})`)).join('')}</div>`}
+    </div>`;
+
+  setInterval(()=>{const fc=document.getElementById('form-clock');if(fc)fc.textContent=getNowTime();},15000);
+}
+
+function renderMonthly(){
+  const months={};
+  entries.forEach(e=>{const ym=e.date.slice(0,7);if(!months[ym])months[ym]={total:0,count:0,entries:[]};months[ym].total+=e.amount;months[ym].count++;months[ym].entries.push(e);});
+  if(detailMonth&&months[detailMonth]){
+    const m=months[detailMonth];
+    const days={};
+    m.entries.forEach(e=>{if(!days[e.date])days[e.date]=[];days[e.date].push(e);});
+    const sd=Object.keys(days).sort((a,b)=>b.localeCompare(a));
+    document.getElementById('tab-monthly').innerHTML=`
+      <button class="back" onclick="detailMonth=null;renderMonthly()">← Back</button>
+      <div class="metrics4" style="margin-bottom:1rem">
+        <div class="met"><div class="met-icon" style="background:#E6F1FB">💰</div><div><div class="met-lbl">Total income</div><div class="met-val g">₹${m.total.toLocaleString('en-IN')}</div></div></div>
+        <div class="met"><div class="met-icon" style="background:#EAF3DE">📆</div><div><div class="met-lbl">Working days</div><div class="met-val">${Object.keys(days).length}</div></div></div>
+      </div>
+      <div class="card"><div class="ctitle">${fmtM(detailMonth)}</div>
+        ${sd.map(ds=>`<div style="margin-bottom:1rem">
+          <div class="daytop"><span class="daylbl">${fmtD(ds)}</span><span class="daytot">₹${days[ds].reduce((s,e)=>s+e.amount,0).toLocaleString('en-IN')} · ${days[ds].length} entries</span></div>
+          <div class="elist">${days[ds].map(e=>entryCard(e,true,`delEntry(${e.id});renderMonthly()`)).join('')}</div>
+        </div>`).join('')}
+      </div>`;
+    return;
+  }
+  const sorted=Object.keys(months).sort((a,b)=>b.localeCompare(a));
+  document.getElementById('tab-monthly').innerHTML=sorted.length===0?'<div class="empty">No entries yet</div>':
+    `<div class="card"><div class="ctitle">Monthly income</div>${sorted.map(ym=>`
+      <div class="mitem" onclick="detailMonth='${ym}';renderMonthly()">
+        <div><div class="mname">${fmtM(ym)}</div><div class="mcnt">${months[ym].count} entries · ${new Set(months[ym].entries.map(e=>e.date)).size} days</div></div>
+        <div class="mtot">₹${months[ym].total.toLocaleString('en-IN')} ›</div>
+      </div>`).join('')}</div>`;
+}
+
+function renderAnalytics(){
+  if(entries.length===0){document.getElementById('tab-analytics').innerHTML='<div class="empty">Data இல்லை</div>';return;}
+  const byType={};entries.forEach(e=>{byType[e.cat]=(byType[e.cat]||0)+e.amount;});
+  const sorted=Object.entries(byType).sort((a,b)=>b[1]-a[1]);
+  const maxV=sorted[0][1];
+  const total=entries.reduce((s,e)=>s+e.amount,0);
+  const catColors={xerox:'#185FA5',print:'#185FA5',scan:'#185FA5',lamination:'#185FA5',phone_cover:'#534AB7',pouch:'#534AB7',temper:'#534AB7',headphone:'#534AB7',speaker:'#534AB7',charger:'#534AB7',repair:'#0F6E56',aadhaar:'#854F0B',pan:'#854F0B',form:'#854F0B',recharge:'#854F0B',online:'#854F0B',passport:'#854F0B',other:'#5F5E5A'};
+  const segments={'Xerox & Print':['xerox','print','scan','lamination'],'Mobile Accessories':['phone_cover','pouch','temper','headphone','speaker','charger'],'Repair':['repair'],'Online Services':['aadhaar','pan','form','recharge','online','passport'],'Other':['other']};
+  const segTotals=Object.entries(segments).map(([name,cats])=>({name,total:cats.reduce((s,c)=>s+(byType[c]||0),0)})).filter(s=>s.total>0);
+  const maxSeg=Math.max(...segTotals.map(s=>s.total),1);
+  const segColors={'Xerox & Print':'#185FA5','Mobile Accessories':'#534AB7','Repair':'#0F6E56','Online Services':'#854F0B','Other':'#5F5E5A'};
+  document.getElementById('tab-analytics').innerHTML=`
+    <div class="metrics4" style="grid-template-columns:repeat(3,1fr);margin-bottom:1rem">
+      <div class="met" style="flex-direction:column;align-items:flex-start;gap:4px"><div class="met-lbl">Total income</div><div class="met-val g" style="font-size:17px">₹${total.toLocaleString('en-IN')}</div></div>
+      <div class="met" style="flex-direction:column;align-items:flex-start;gap:4px"><div class="met-lbl">Total entries</div><div class="met-val" style="font-size:17px">${entries.length}</div></div>
+      <div class="met" style="flex-direction:column;align-items:flex-start;gap:4px"><div class="met-lbl">Avg/entry</div><div class="met-val" style="font-size:17px">₹${Math.round(total/entries.length).toLocaleString('en-IN')}</div></div>
+    </div>
+    <div class="card"><div class="ctitle">Income by segment</div>${segTotals.map(s=>`<div class="brow"><div class="blbl">${s.name}</div><div class="btrack"><div class="bfill" style="width:${Math.round(s.total/maxSeg*100)}%;background:${segColors[s.name]||'#888'}"></div></div><div class="bval">₹${s.total.toLocaleString('en-IN')}</div></div>`).join('')}</div>
+    <div class="card"><div class="ctitle">Income by service</div>${sorted.map(([cid,amt])=>{const c=cat(cid);return`<div class="brow"><div class="blbl">${c.icon} ${c.name}</div><div class="btrack"><div class="bfill" style="width:${Math.round(amt/maxV*100)}%;background:${catColors[cid]||'#888'}"></div></div><div class="bval">₹${amt.toLocaleString('en-IN')}</div></div>`;}).join('')}</div>`;
+}
+
+load();
+</script>
